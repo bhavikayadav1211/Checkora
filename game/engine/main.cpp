@@ -637,14 +637,29 @@ int minimax(int depth, int alpha, int beta, bool maximizing) {
 
     string side = maximizing ? "white" : "black";
     vector<Move> moves = generateMoves(side);
+    if (depth > 3 && moves.size() > 25)
+    {
+        depth = 3;
+    }
     orderMoves(moves);
 
     // Filter out moves that leave own king in check
     vector<Move> legal;
+    int checkedMoves = 0;
     legal.reserve(moves.size());
+    int checkedMoves = 0;
+
     for (auto &m : moves) {
-        if (!leavesKingInCheck(m, side))
+
+        if (checkedMoves > 12) {
             legal.push_back(m);
+            continue;
+        }
+
+        if (!leavesKingInCheck(m, side)) {
+            legal.push_back(m);
+            checkedMoves++;
+        }
     }
 
     // No legal moves: checkmate or stalemate
@@ -902,6 +917,7 @@ void handleNotation(const string &turn, int fr, int fc, int tr, int tc) {
  * Runs minimax to the requested depth and returns the best move
  * for the given side.
  */
+
 void handleBestMove(const string &turn, int depth) {
     bool maximizing = (turn == "white");
     vector<Move> moves = generateMoves(turn);
@@ -1017,7 +1033,7 @@ int main() {
             loadBoard(b);
             loadCastlingRights(rights);
             EN_PASSANT_R = epR; EN_PASSANT_C = epC;
-            handleBestMove(t, depth);
+            handleBestMove(t, depth );
         }
         else if (command == "NOTATION") {
             string b, rights, t; int epR, epC, fr, fc, tr, tc;

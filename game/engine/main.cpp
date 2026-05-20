@@ -649,10 +649,9 @@ int minimax(int depth, int alpha, int beta, bool maximizing) {
     legal.reserve(moves.size());
 
     for (auto &m : moves) {
-        if (!leavesKingInCheck(m, side)) {
+        if (!leavesKingInCheck(m, side)) 
             legal.push_back(m);
-            checkedMoves++;
-        }
+        
     }
 
     // No legal moves: checkmate or stalemate
